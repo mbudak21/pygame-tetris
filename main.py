@@ -10,7 +10,7 @@ class Game:
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT)) # Width, height
         self.running = True
 
-        self.board = Board() # Init board class
+        self.board = Board(self.screen) # Init board class
     
     def run(self):
         while self.running:
@@ -29,7 +29,7 @@ class Game:
     def draw(self):
         self.screen.fill("purple")
         # Draw here
-        self.board.draw(self.screen)
+        self.board.draw()
         pygame.display.flip()
 
 

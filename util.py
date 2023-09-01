@@ -7,6 +7,9 @@ class Board:
     UNIT_HEIGHT = 16  # Number of units along the height
     debug = True
 
+    COLORS = {'.' : (0, 0, 0),  # Color for empty cells (Black)
+              '■' : (70, 70, 70)}  # Color for filled cells (Gray)
+
     def __init__(self, screen):
         """Initialize a new game board."""
         # Create a 2D list (UNIT_HEIGHT x UNIT_WIDTH) filled with '.'
@@ -21,18 +24,24 @@ class Board:
 
         if self.debug:
             print("Initialized Board")
-
-
+            # TODO: Add more debug info
 
     def get_board(self):
         return self.board
-    
-    def draw(self):
 
-        
-        # TODO: Implement drawing method
-        # pygame.draw.rect(screen, "WHITE", (0, 0, 50, 50))
-        pass
+    def draw(self):
+        print(self)
+        # Iterate through each row
+        for y, row in enumerate(self.board):
+            # Iterate through each cell in the row
+            for x, cell in enumerate(row):
+                # Determine the (x,y) position on the screen for this block
+                rect = pygame.Rect(x * self.BLOCK_WIDTH, y * self.BLOCK_HEIGHT, self.BLOCK_WIDTH-1, self.BLOCK_HEIGHT-1)
+
+                # Draw the block using the appropriate color
+                pygame.draw.rect(self.screen, self.COLORS[cell], rect)
+
+
 
 
 
@@ -52,7 +61,6 @@ class Board:
         return '\n'.join(rows)        
 
 if __name__ == "__main__":
-    board = Board()
-    print(board)
+    print("lame")
 
     
