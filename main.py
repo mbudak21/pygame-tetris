@@ -1,12 +1,16 @@
 import pygame
-from util import *
+from util import Board
+
+WIDTH, HEIGHT = 450, 900
 
 
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((800, 600)) # Width, height
-        self.running = True 
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT)) # Width, height
+        self.running = True
+
+        self.board = Board() # Init board class
     
     def run(self):
         while self.running:
@@ -24,7 +28,10 @@ class Game:
     
     def draw(self):
         self.screen.fill("purple")
+        # Draw here
+        self.board.draw(self.screen)
         pygame.display.flip()
+
 
 if __name__ == "__main__":
     game = Game()
