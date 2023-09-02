@@ -7,17 +7,27 @@ class Board:
     UNIT_HEIGHT = 16  # Number of units along the height
     debug = True
 
+
+    GAP_SIZE = 1
     COLORS = {'.' : (0, 0, 0),  # Color for empty cells (Black)
               '■' : (70, 70, 70)}  # Color for filled cells (Gray)
 
-    def __init__(self, screen):
+    def __init__(self, surface):
         """Initialize a new game board."""
         # Create a 2D list (UNIT_HEIGHT x UNIT_WIDTH) filled with '.'
         self.board = [["." for _ in range(self.UNIT_WIDTH)] for _ in range(self.UNIT_HEIGHT)]
 
-        self.screen = screen
-        self.WIDTH = screen.get_width()
-        self.HEIGHT = screen.get_height()
+        self.board[0][0] = "■"
+        self.board[1][3] = "■"
+        self.board[3][1] = "■"
+        self.board[1][1] = "■"
+        self.board[2][2] = "■"
+        self.board[3][3] = "■"
+        self.board[4][4] = "■"
+
+        self.surface = surface
+        self.WIDTH = surface.get_width()
+        self.HEIGHT = surface.get_height()
 
         self.BLOCK_WIDTH = self.WIDTH // self.UNIT_WIDTH
         self.BLOCK_HEIGHT = self.HEIGHT // self.UNIT_HEIGHT
@@ -30,16 +40,18 @@ class Board:
         return self.board
 
     def draw(self):
+        print("Board:")
         print(self)
+        self.surface.fill("purple")
         # Iterate through each row
         for y, row in enumerate(self.board):
             # Iterate through each cell in the row
             for x, cell in enumerate(row):
                 # Determine the (x,y) position on the screen for this block
-                rect = pygame.Rect(x * self.BLOCK_WIDTH, y * self.BLOCK_HEIGHT, self.BLOCK_WIDTH-1, self.BLOCK_HEIGHT-1)
+                rect = pygame.Rect(x * self.BLOCK_WIDTH, y * self.BLOCK_HEIGHT, self.BLOCK_WIDTH-self.GAP_SIZE, self.BLOCK_HEIGHT-self.GAP_SIZE)
 
                 # Draw the block using the appropriate color
-                pygame.draw.rect(self.screen, self.COLORS[cell], rect)
+                pygame.draw.rect(self.surface, self.COLORS[cell], rect)
 
 
 
@@ -61,6 +73,8 @@ class Board:
         return '\n'.join(rows)        
 
 if __name__ == "__main__":
-    print("lame")
+    from main import Game
+    game = Game()
+    game.run()
 
     
