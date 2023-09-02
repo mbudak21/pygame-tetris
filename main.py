@@ -1,6 +1,7 @@
 import pygame
 from util import Board
 
+# Constants
 GRID_WIDTH, GRID_HEIGHT = 450, 900
 WIDTH, HEIGHT = 750, 1000
 FILL_COLOR = (30, 30, 30)
@@ -8,8 +9,9 @@ FILL_COLOR = (30, 30, 30)
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT)) # Width, height
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT)) # Screen
         self.running = True
+        
 
         self.board = Board(pygame.Surface((GRID_WIDTH, GRID_HEIGHT))) # Init board class
     
