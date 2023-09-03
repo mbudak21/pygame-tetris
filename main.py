@@ -5,16 +5,19 @@ from util import Board, TetrisBlock
 GRID_WIDTH, GRID_HEIGHT = 450, 900
 WIDTH, HEIGHT = 750, 1000
 FILL_COLOR = (30, 30, 30)
+AUTOFALL_EVENT = pygame.USEREVENT + 1
+FALL_TIME = 200 # in miliseconds, TODO: Level system
 
 class Game:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT)) # Screen
         self.running = True
-        
 
         self.board = Board(pygame.Surface((GRID_WIDTH, GRID_HEIGHT))) # Init board class
         self.current_shape = TetrisBlock()
+
+        pygame.time.set_timer(AUTOFALL_EVENT, 500)
     
     def run(self):
         while self.running:
@@ -29,6 +32,8 @@ class Game:
                 self.running = False
             elif event.type == pygame.KEYDOWN:  # Handle keypresses here
                 keys = pygame.key.get_pressed()
+                if keys[pygame.K_ESCAPE]:
+                    self.running = False
                 if keys[pygame.K_LEFT]:
                     self.current_shape.move_left()
                 if keys[pygame.K_RIGHT]:
@@ -41,6 +46,8 @@ class Game:
                     # Merge and reset the current_shape
                     self.board.merge_with_board(self.current_shape)
                     self.current_shape = TetrisBlock()
+            elif event.type == AUTOFALL_EVENT:
+                self.current_shape.move_down()
                 
     def update(self):
         pass  # Game logic here
