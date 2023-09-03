@@ -87,9 +87,8 @@ class TetrisBlock:
             self.y += 1
         # Drop the block if it's at the bottom
     
-    def drop(self):
+    def save(self):
         """Saves the block to the boards matrix."""
-        pass
 
     
     def rotate(self):
@@ -142,8 +141,11 @@ class Board:
     def get_board(self):
         return self.board
     
-    def merge_with_board(self, shape):
-        pass
+    def merge_with_board(self, block):
+        for y, row in enumerate(block.shape):
+            for x, cell in enumerate(row):
+                if cell != ".":  # Assuming "." means empty
+                    self.board[block.y + y][block.x + x] = cell
 
     def draw(self, current_block):
         if self.debug:

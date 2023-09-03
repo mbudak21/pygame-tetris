@@ -23,26 +23,24 @@ class Game:
             self.draw()
     
     def handle_events(self):
+        """Handles events and keypress actions"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-        # Handle keypresses here
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            self.current_shape.move_left()
-            print("Left")
-        if keys[pygame.K_RIGHT]:
-            self.current_shape.move_right()
-            print("Right")
-        if keys[pygame.K_DOWN]:
-            self.current_shape.move_down()
-            print("Down")
-        if keys[pygame.K_UP]:
-            self.current_shape.rotate()
-            print("Up")
-        if keys[pygame.K_SPACE]:
-            self.current_shape.drop()
-            print("Space")
+            elif event.type == pygame.KEYDOWN:  # Handle keypresses here
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_LEFT]:
+                    self.current_shape.move_left()
+                if keys[pygame.K_RIGHT]:
+                    self.current_shape.move_right()
+                if keys[pygame.K_DOWN]:
+                    self.current_shape.move_down()
+                if keys[pygame.K_UP]:
+                    self.current_shape.rotate()
+                if keys[pygame.K_SPACE]:
+                    # Merge and reset the current_shape
+                    self.board.merge_with_board(self.current_shape)
+                    self.current_shape = TetrisBlock()
                 
     def update(self):
         pass  # Game logic here
