@@ -52,8 +52,6 @@ class TetrisBlock:
 
         print(self.x)
 
-
-
     def get_size(self):
         depth = 0
         width = 0
@@ -85,10 +83,9 @@ class TetrisBlock:
             pass
         else:
             self.y += 1
-        # Drop the block if it's at the bottom
-    
-    def save(self):
-        """Saves the block to the boards matrix."""
+
+    def drop_to_bottom(self):
+        self.y = Board.UNIT_HEIGHT - self.depth
 
     
     def rotate(self):
@@ -115,7 +112,7 @@ class Board:
     
     UNIT_WIDTH = 9  # Number of units along the width
     UNIT_HEIGHT = 16  # Number of units along the height
-    debug = False
+    debug = True
 
 
     GAP_SIZE = 1
@@ -147,11 +144,27 @@ class Board:
                 if cell != ".":  # Assuming "." means empty
                     self.board[block.y + y][block.x + x] = cell
 
-    def draw(self, current_block):
-        if self.debug:
-            print("Board:")
-            print(self)
+    def create_empty_row(self):
+        return ["."] * self.UNIT_WIDTH
 
+    def check_full_rows(self):  # Checks all rows
+        full_rows = []
+        for i, row in enumerate(self.get_board()):
+            if not ("." in row):
+                full_rows.append(i)
+                if self.debug:
+                    print(f"Full row: {i}")
+        return full_rows
+
+    def shift_down(self, full_rows):
+        for row_index in reversed(full_rows):
+            del self.board[row_index]  # Remove the full row
+            self.board.insert(0, self.create_empty_row())  # Add an empty row at the top
+
+
+            
+
+    def draw(self, current_block):
         self.surface.fill("purple")
 
         for y, row in enumerate(self.board):

@@ -46,11 +46,14 @@ class Game:
                     # Merge and reset the current_shape
                     self.board.merge_with_board(self.current_shape)
                     self.current_shape = TetrisBlock()
+                if keys[pygame.K_d]:
+                    self.current_shape.drop_to_bottom()
             elif event.type == AUTOFALL_EVENT:
                 self.current_shape.move_down()
                 
     def update(self):
-        pass  # Game logic here
+        self.board.shift_down(self.board.check_full_rows())
+
     
     def draw(self):
         self.screen.fill(FILL_COLOR)
