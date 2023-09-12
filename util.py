@@ -62,7 +62,7 @@ class TetrisBlock:
                         depth = y+1
                     if width < x+1:
                         width = x+1
-        return depth, width
+        return depth, width 
 
     def move_left(self):
         # Move the block left
@@ -81,6 +81,7 @@ class TetrisBlock:
         # Move the block down
         if self.y + self.depth+1 > Board.UNIT_HEIGHT:
             pass
+        
         else:
             self.y += 1
 
@@ -89,8 +90,11 @@ class TetrisBlock:
 
     
     def rotate(self):
-        # Rotate the block
-        pass
+        # Transpose the block (swap rows with columns)
+        transposed = list(zip(*self.shape))
+
+        # Reverse each row to get the rotated block
+        self.shape = [list(reversed(row)) for row in transposed]
 
     def __str__(self):
         # Initialize an empty list to collect strings
@@ -118,6 +122,8 @@ class Board:
     GAP_SIZE = 1
     COLORS = {'.' : (0, 0, 0),  # Color for empty cells (Black)
               '■' : (70, 70, 70)}  # Color for filled cells (Gray)
+    COLORS2 = {'.' : (70, 10, 10),
+              '■' : (120, 70, 70)}
 
     def __init__(self, surface):
         """Initialize a new game board on the given surface."""
@@ -144,6 +150,15 @@ class Board:
                 if cell != ".":  # Assuming "." means empty
                     self.board[block.y + y][block.x + x] = cell
 
+    def check_wall_collision(self, block):
+        """"""
+    
+    def check_block_collision(self, block):
+        pass
+
+    def check_floor_collision(self, block):
+        pass
+
     def create_empty_row(self):
         return ["."] * self.UNIT_WIDTH
 
@@ -161,9 +176,6 @@ class Board:
             del self.board[row_index]  # Remove the full row
             self.board.insert(0, self.create_empty_row())  # Add an empty row at the top
 
-
-            
-
     def draw(self, current_block):
         self.surface.fill("purple")
 
@@ -178,10 +190,10 @@ class Board:
         # Draw the current block
         for y, row in enumerate(current_block.shape):
             for x, cell in enumerate(row):
-                if cell != ".":
+                if True: # cell != ".":
                     # Same logic
                     rect = pygame.Rect((x + current_block.x) * self.BLOCK_WIDTH, (y + current_block.y) * self.BLOCK_HEIGHT, self.BLOCK_WIDTH-self.GAP_SIZE, self.BLOCK_HEIGHT-self.GAP_SIZE)
-                    pygame.draw.rect(self.surface, self.COLORS[cell], rect)
+                    pygame.draw.rect(self.surface, self.COLORS2[cell], rect)
 
     def __str__(self):
         # Initialize an empty list to collect strings
