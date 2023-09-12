@@ -94,7 +94,7 @@ class TetrisBlock:
         transposed = list(zip(*self.shape))
 
         # Reverse each row to get the rotated block
-        self.shape = [list(reversed(row)) for row in transposed]
+        self.shape = [list(reversed(row)) for row in transposed]        
 
     def __str__(self):
         # Initialize an empty list to collect strings
@@ -147,14 +147,23 @@ class Board:
     def merge_with_board(self, block):
         for y, row in enumerate(block.shape):
             for x, cell in enumerate(row):
-                if cell != ".":  # Assuming "." means empty
+                if cell != ".":
                     self.board[block.y + y][block.x + x] = cell
-
-    def check_wall_collision(self, block):
-        """"""
     
     def check_block_collision(self, block):
-        pass
+        """
+        Checks the collision
+        returns True if there is a collision
+        """
+        # unpack and check overlaps
+        for y, row in enumerate(block.shape):
+            for x, cell in enumerate(row):
+                try:
+                    if cell != "." and self.board[block.y + y][block.x + x] != ".":
+                        return True # Shape Collision
+                except IndexError: 
+                    return True # Wall Collision
+        return False
 
     def check_floor_collision(self, block):
         pass

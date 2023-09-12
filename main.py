@@ -32,7 +32,7 @@ class Game:
                 self.running = False
             elif event.type == pygame.KEYDOWN:  # Handle keypresses here
                 keys = pygame.key.get_pressed()
-                if keys[pygame.K_ESCAPE]:
+                if keys[pygame.K_ESCAPE] or keys[pygame.K_q]:
                     self.running = False
                 if keys[pygame.K_LEFT]:
                     self.current_shape.move_left()
@@ -50,7 +50,8 @@ class Game:
                     self.current_shape.drop_to_bottom()
             elif event.type == AUTOFALL_EVENT:
                 self.current_shape.move_down()
-                
+        print(self.board.check_block_collision(self.current_shape))
+
     def update(self):
         self.board.shift_down(self.board.check_full_rows())
 
