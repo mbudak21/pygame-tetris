@@ -15,7 +15,6 @@ class Game:
         self.running = True
 
         self.board = Board(pygame.Surface((GRID_WIDTH, GRID_HEIGHT))) # Init board class
-        self.current_shape = TetrisBlock()
 
         pygame.time.set_timer(AUTOFALL_EVENT, 500)
     
@@ -35,22 +34,20 @@ class Game:
                 if keys[pygame.K_ESCAPE] or keys[pygame.K_q]:
                     self.running = False
                 if keys[pygame.K_LEFT]:
-                    self.current_shape.move_left()
+                    self.board.move_current_shape(left=True)
                 if keys[pygame.K_RIGHT]:
-                    self.current_shape.move_right()
+                    self.board.move_current_shape(right=True)
                 if keys[pygame.K_DOWN]:
-                    self.current_shape.move_down()
+                    self.board.move_current_shape(down=True)
                 if keys[pygame.K_UP]:
-                    self.current_shape.rotate()
+                    pass
                 if keys[pygame.K_SPACE]:
-                    # Merge and reset the current_shape
-                    self.board.merge_with_board(self.current_shape)
-                    self.current_shape = TetrisBlock()
+                    pass
                 if keys[pygame.K_d]:
-                    self.current_shape.drop_to_bottom()
+                    self.board.current_shape.drop_to_bottom()
             elif event.type == AUTOFALL_EVENT:
-                self.current_shape.move_down()
-        print(self.board.check_block_collision(self.current_shape))
+                self.board.current_shape.move_down()
+        print(self.board.check_current_shape_collision())
 
     def update(self):
         self.board.shift_down(self.board.check_full_rows())
@@ -60,7 +57,7 @@ class Game:
         self.screen.fill(FILL_COLOR)
         # Draw here
         self.screen.blit(self.board.surface, ((WIDTH-GRID_WIDTH)/2, (HEIGHT-GRID_HEIGHT)))
-        self.board.draw(self.current_shape)
+        self.board.draw()
         pygame.display.flip()
 
 

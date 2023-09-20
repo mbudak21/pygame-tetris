@@ -37,12 +37,12 @@ class TetrisBlock:
         ["■", "■", "■"],
         [".", ".", "."]
     ]
-    # Combine all the shapes into a list for easy access
-    all_shapes = [O_BLOCK, I_BLOCK, S_BLOCK, Z_BLOCK, L_BLOCK, J_BLOCK, T_BLOCK]
+    # Combine all the tetromino into a list for easy access
+    all_tetromino = [O_BLOCK, I_BLOCK, S_BLOCK, Z_BLOCK, L_BLOCK, J_BLOCK, T_BLOCK]
 
     def __init__(self):
-        self.shape=random.choice(self.all_shapes)
-        # self.shape=self.all_shapes[0]
+        self.tetromino=random.choice(self.all_tetromino)
+        # self.tetromino=self.all_tetromino[0]
 
         self.depth, self.width = self.get_size()
 
@@ -55,7 +55,7 @@ class TetrisBlock:
     def get_size(self):
         depth = 0
         width = 0
-        for y, row in enumerate(self.shape):
+        for y, row in enumerate(self.tetromino):
             for x in range(len(row)):
                 if row[x] != ".": # Found shape at (x, y)
                     if depth < y+1:
@@ -91,17 +91,17 @@ class TetrisBlock:
     
     def rotate(self):
         # Transpose the block (swap rows with columns)
-        transposed = list(zip(*self.shape))
+        transposed = list(zip(*self.tetromino))
 
         # Reverse each row to get the rotated block
-        self.shape = [list(reversed(row)) for row in transposed]        
+        self.tetromino = [list(reversed(row)) for row in transposed]        
 
     def __str__(self):
         # Initialize an empty list to collect strings
         rows = []
         
         # Iterate through each row in self.board
-        for row in self.shape:
+        for row in self.tetromino:
             # Convert each element in the row to a string, then join them with spaces
             row_str = ' '.join(map(str, row))
             
@@ -137,43 +137,48 @@ class Board:
         self.BLOCK_WIDTH = self.WIDTH // self.UNIT_WIDTH
         self.BLOCK_HEIGHT = self.HEIGHT // self.UNIT_HEIGHT
 
+        self.current_shape = TetrisBlock()
+
         if self.debug:
             print("Initialized Board")
             # TODO: Add more debug info
 
-    def get_board(self):
-        return self.board
-    
-    def merge_with_board(self, block):
-        for y, row in enumerate(block.shape):
+
+    def move_current_shape(self, *, left=False, right=False, down=False) -> None:
+        if left:
+            self.current_shape.move_left()
+        elif right:
+            self.current_shape.move_right()
+        elif down:
+            self.current_shape.move_down()
+
+    def merge_with_board(self):
+        for y, row in enumerate(self.current_shape.tetromino):
             for x, cell in enumerate(row):
                 if cell != ".":
-                    self.board[block.y + y][block.x + x] = cell
+                    self.board[self.current_shape.y + y][self.current_shape.x + x] = cell
     
-    def check_block_collision(self, block):
+    def check_current_shape_collision(self):
         """
         Checks the collision
         returns True if there is a collision
         """
         # unpack and check overlaps
-        for y, row in enumerate(block.shape):
+        for y, row in enumerate(self.current_shape.tetromino):
             for x, cell in enumerate(row):
                 try:
-                    if cell != "." and self.board[block.y + y][block.x + x] != ".":
+                    if cell != "." and self.board[self.current_shape.y + y][self.current_shape.x + x] != ".":
                         return True # Shape Collision
                 except IndexError: 
                     return True # Wall Collision
         return False
-
-    def check_floor_collision(self, block):
-        pass
 
     def create_empty_row(self):
         return ["."] * self.UNIT_WIDTH
 
     def check_full_rows(self):  # Checks all rows
         full_rows = []
-        for i, row in enumerate(self.get_board()):
+        for i, row in enumerate(self.board):
             if not ("." in row):
                 full_rows.append(i)
                 if self.debug:
@@ -185,7 +190,7 @@ class Board:
             del self.board[row_index]  # Remove the full row
             self.board.insert(0, self.create_empty_row())  # Add an empty row at the top
 
-    def draw(self, current_block):
+    def draw(self):
         self.surface.fill("purple")
 
         for y, row in enumerate(self.board):
@@ -196,12 +201,12 @@ class Board:
                 # Draw the block using the appropriate color
                 pygame.draw.rect(self.surface, self.COLORS[cell], rect)
 
-        # Draw the current block
-        for y, row in enumerate(current_block.shape):
+        # Draw the current shape
+        for y, row in enumerate(self.current_shape.tetromino):
             for x, cell in enumerate(row):
                 if True: # cell != ".":
                     # Same logic
-                    rect = pygame.Rect((x + current_block.x) * self.BLOCK_WIDTH, (y + current_block.y) * self.BLOCK_HEIGHT, self.BLOCK_WIDTH-self.GAP_SIZE, self.BLOCK_HEIGHT-self.GAP_SIZE)
+                    rect = pygame.Rect((x + self.current_shape.x) * self.BLOCK_WIDTH, (y + self.current_shape.y) * self.BLOCK_HEIGHT, self.BLOCK_WIDTH-self.GAP_SIZE, self.BLOCK_HEIGHT-self.GAP_SIZE)
                     pygame.draw.rect(self.surface, self.COLORS2[cell], rect)
 
     def __str__(self):
